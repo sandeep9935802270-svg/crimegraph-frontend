@@ -166,6 +166,33 @@ function CaseDetails({ setPage, selectedCase }) {
   }
 
   /* ================================
+     DELETE EVIDENCE
+  ================================= */
+
+  const handleDeleteEvidence = (evidenceId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this evidence record?"
+    )
+
+    if (!confirmed) return
+
+    const updatedEvidence = evidence.filter(
+      (item) => item.id !== evidenceId
+    )
+
+    setEvidence(updatedEvidence)
+
+    const storageKey = `criminal_network_evidence_${selectedCase.id}`
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(updatedEvidence)
+    )
+
+    setSelectedEvidence(null)
+  }
+
+  /* ================================
      EXPORT EVIDENCE
   ================================= */
 
@@ -212,8 +239,8 @@ function CaseDetails({ setPage, selectedCase }) {
     selectedCase.risk === "High"
       ? 87
       : selectedCase.risk === "Medium"
-      ? 64
-      : 31
+        ? 64
+        : 31
 
   /* ================================
      SEVERITY STYLE
@@ -242,7 +269,6 @@ function CaseDetails({ setPage, selectedCase }) {
         ================================= */}
 
         <div className="flex items-center justify-between mb-6">
-
           <button
             onClick={() => setPage("cases")}
             className="text-sm text-slate-400 hover:text-white transition"
@@ -253,7 +279,6 @@ function CaseDetails({ setPage, selectedCase }) {
           <div className="text-xs text-slate-600">
             Investigation / {selectedCase.id}
           </div>
-
         </div>
 
         {/* =================================
@@ -301,8 +326,8 @@ function CaseDetails({ setPage, selectedCase }) {
                     selectedCase.risk === "High"
                       ? "text-red-400 bg-red-500/10 border-red-500/20"
                       : selectedCase.risk === "Medium"
-                      ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                      : "text-slate-300 bg-slate-500/10 border-slate-700"
+                        ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                        : "text-slate-300 bg-slate-500/10 border-slate-700"
                   }`}
                 >
                   {selectedCase.risk} Risk
@@ -352,8 +377,8 @@ function CaseDetails({ setPage, selectedCase }) {
                   selectedCase.risk === "High"
                     ? "text-red-400"
                     : selectedCase.risk === "Medium"
-                    ? "text-amber-400"
-                    : "text-slate-300"
+                      ? "text-amber-400"
+                      : "text-slate-300"
                 }`}
               >
                 {selectedCase.risk}
@@ -383,9 +408,10 @@ function CaseDetails({ setPage, selectedCase }) {
           <div className="flex items-end justify-between mb-3">
 
             <div>
-             <h2 className="text-base font-semibold text-red-400">
+              <h2 className="text-base font-semibold text-red-400">
                 Intelligence Overview
-            </h2>
+              </h2>
+
               <p className="text-xs text-slate-500 mt-1">
                 Current network assessment based on available case data
               </p>
@@ -590,6 +616,7 @@ function CaseDetails({ setPage, selectedCase }) {
               <table className="w-full min-w-[850px]">
 
                 <thead>
+
                   <tr className="border-b border-slate-800 bg-[#09101c]">
 
                     <th className="text-left px-6 py-3 text-[10px] uppercase tracking-wider font-medium text-slate-600">
@@ -621,6 +648,7 @@ function CaseDetails({ setPage, selectedCase }) {
                     </th>
 
                   </tr>
+
                 </thead>
 
                 <tbody>
@@ -688,16 +716,30 @@ function CaseDetails({ setPage, selectedCase }) {
 
                       </td>
 
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4">
 
-                        <button
-                          onClick={() =>
-                            setSelectedEvidence(item)
-                          }
-                          className="text-xs text-blue-400 hover:text-blue-300 transition"
-                        >
-                          Inspect →
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+
+                          <button
+                            onClick={() =>
+                              setSelectedEvidence(item)
+                            }
+                            className="text-xs text-blue-400 hover:text-blue-300 transition"
+                          >
+                            Inspect →
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              handleDeleteEvidence(item.id)
+                            }
+                            title="Delete Evidence"
+                            className="h-8 w-8 flex items-center justify-center rounded-md border border-red-500/20 bg-red-500/5 text-red-400 hover:bg-red-500/15 hover:border-red-500/40 transition"
+                          >
+                            🗑
+                          </button>
+
+                        </div>
 
                       </td>
 
@@ -974,6 +1016,7 @@ function CaseDetails({ setPage, selectedCase }) {
           </div>
 
         </div>
+
       )}
 
       {/* =================================
@@ -1106,11 +1149,20 @@ function CaseDetails({ setPage, selectedCase }) {
 
             </div>
 
-            <div className="px-6 py-4 border-t border-slate-800">
+            <div className="px-6 py-4 border-t border-slate-800 flex gap-2">
+
+              <button
+                onClick={() =>
+                  handleDeleteEvidence(selectedEvidence.id)
+                }
+                className="flex-1 px-4 py-2.5 rounded-md border border-red-500/20 bg-red-500/5 hover:bg-red-500/15 text-red-400 text-xs font-medium transition"
+              >
+                Delete Evidence
+              </button>
 
               <button
                 onClick={() => setSelectedEvidence(null)}
-                className="w-full px-4 py-2.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition"
+                className="flex-1 px-4 py-2.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition"
               >
                 Close Record
               </button>
